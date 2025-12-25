@@ -40,6 +40,7 @@
             padding: 10px;
             border-radius: 5px;
             border: none;
+            outline: none;
         }
 
         button {
@@ -50,6 +51,10 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        button:hover {
+            background: #00e6b8;
         }
 
         .result {
@@ -71,14 +76,13 @@
 
     <div class="box">
 
-        <div class="text" id="sampleText">
-            Practice makes a man perfect. Typing speed improves with regular practice.
-        </div>
+        <div class="text" id="sampleText"></div>
 
         <textarea id="inputText" placeholder="Start typing here..."></textarea>
 
         <br>
         <button onclick="checkTyping()">Check Result</button>
+        <button onclick="loadNewText()">Next Text</button>
 
         <div class="result" id="result"></div>
 
@@ -89,36 +93,60 @@
     </footer>
 
     <script>
-        let startTime;
+        let startTime = null;
+        let currentText = "";
+
+        const texts = [
+            "Practice makes a man perfect. Typing speed improves with regular practice.",
+            "The quick brown fox jumps over the lazy dog.",
+            "Learning to code improves logical thinking and creativity.",
+            "Consistency is the key to mastering any skill.",
+            "Typing fast and accurately saves valuable time.",
+            "Success comes to those who practice daily and stay disciplined."
+        ];
+
+        function loadNewText() {
+            const randomIndex = Math.floor(Math.random() * texts.length);
+            currentText = texts[randomIndex];
+            document.getElementById("sampleText").innerText = currentText;
+            document.getElementById("inputText").value = "";
+            document.getElementById("result").innerHTML = "";
+            startTime = null;
+        }
 
         document.getElementById("inputText").addEventListener("focus", () => {
-            startTime = new Date().getTime();
+            if (!startTime) {
+                startTime = new Date().getTime();
+            }
         });
 
         function checkTyping() {
-            let typedText = document.getElementById("inputText").value;
-            let originalText = document.getElementById("sampleText").innerText;
+            if (!startTime) return;
 
-            let endTime = new Date().getTime();
-            let timeTaken = (endTime - startTime) / 1000;
+            const typedText = document.getElementById("inputText").value;
+            const endTime = new Date().getTime();
+            const timeTaken = (endTime - startTime) / 1000;
 
-            let words = typedText.trim().split(" ").length;
-            let speed = Math.round((words / timeTaken) * 60);
+            const words = typedText.trim().split(/\s+/).length;
+            const speed = Math.round((words / timeTaken) * 60);
 
             let correct = 0;
             for (let i = 0; i < typedText.length; i++) {
-                if (typedText[i] === originalText[i]) {
+                if (typedText[i] === currentText[i]) {
                     correct++;
                 }
             }
 
-            let accuracy = Math.round((correct / originalText.length) * 100);
+            const accuracy = Math.round((correct / currentText.length) * 100);
 
             document.getElementById("result").innerHTML =
-                "⏱ Time: " + timeTaken + " sec<br>" +
+                "⏱ Time: " + timeTaken.toFixed(1) + " sec<br>" +
                 "⚡ Speed: " + speed + " WPM<br>" +
                 "🎯 Accuracy: " + accuracy + "%";
         }
+
+        // Load first text automatically
+        window.onload = loadNewText;
     </script>
 
 </body>

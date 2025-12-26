@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Document Editor</title>
+    <style>
+        textarea {
+            width: 100%;
+            height: 300px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Document Editor</h1>
+    <textarea id="editor" placeholder="Type your text here..."></textarea>
+    <button onclick="saveText()">Save</button>
+
+    <script>
+        function saveText() {
+            const text = document.getElementById('editor').value;
+            alert('Text saved: ' + text);
+            // यहाँ आप इसे सर्वर पर भी सेव कर सकते हैं।
+        }
+    </script>
+</body>
+</html>
